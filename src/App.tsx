@@ -18,6 +18,12 @@ const initialTasks: Task[] = [
     description: 'descripcion prueba 2',
     completed: false,
   },
+  {
+    id: 3,
+    title: 'Prueba 3',
+    description: 'descripcion prueba 3',
+    completed: true,
+  },
 ]
 
 function App() {
@@ -27,7 +33,7 @@ function App() {
     <>
       <div>
         <Layout>
-          <SearchInput label="prueba" value={inputValue} onChange={(texto) => setInputValue(texto)} />
+          <SearchInput label="prueba" value={inputValue} onValueChange={(texto) => setInputValue(texto)} />
           <TaskList tasks={initialTasks} filterText={inputValue} />
         </Layout>
       </div>

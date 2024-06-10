@@ -1,16 +1,29 @@
-import { FC } from 'react'
+import { ChangeEvent, FC, useCallback, useEffect, useRef } from 'react'
 
 interface SearchInputProps {
   label: string
   value: string
-  onChange: (value: string) => void
+  onValueChange: (value: string) => void
 }
 
-const SearchInput: FC<SearchInputProps> = (props) => {
+const SearchInput: FC<SearchInputProps> = ({ label, value, onValueChange }) => {
+  const whenChanged = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onValueChange(e.target.value)
+    },
+    [onValueChange],
+  )
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  })
+
   return (
     <div>
-      <label>{props.label}</label>
-      <input type="text" value={props.value} onChange={(e) => props.onChange(e.target.value)} />
+      <label>{label}</label>
+      <input ref={inputRef} type="text" value={value} onChange={whenChanged} />
     </div>
   )
 }

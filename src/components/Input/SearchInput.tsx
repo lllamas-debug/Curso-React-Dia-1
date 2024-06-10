@@ -22,8 +22,8 @@ const SearchInput: FC<SearchInputProps> = ({ label, value, onValueChange }) => {
 
   return (
     <div>
-      <label>{label}</label>
-      <input ref={inputRef} type="text" value={value} onChange={whenChanged} />
+      <label htmlFor="busqueda">{label}</label>
+      <input name="busqueda" ref={inputRef} type="text" value={value} onChange={whenChanged} />
     </div>
   )
 }

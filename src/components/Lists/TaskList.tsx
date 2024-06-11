@@ -1,28 +1,23 @@
 import React from 'react'
-import useTaskUtils from '../../hooks/useTaskUtils'
-import { Task } from '../../types'
-import TaskCard from '../TaskCard/TaskCard'
-import './TaskList.css'
 
-interface TaskListProps {
-  tasks: Task[]
+interface ListProps<T> {
+  items: T[]
   filterText?: string
+  filterByText: (item: T, filter?: string) => boolean
+  getKey: (item: T) => string | number
+  renderItem: (item: T) => React.ReactNode
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, filterText }) => {
-  const { filterTasks } = useTaskUtils()
-  const filteredTasks = filterTasks(tasks, filterText)
-
+const ListWithFilter = <T,>({ items, filterText, getKey, renderItem, filterByText }: ListProps<T>) => {
+  const itemsFiltered: T[] = items.filter((item) => filterByText(item, filterText))
   return (
-    <ul className="taskList">
-      {filterText && <p>filtrando por: {filterText}</p>}
-      {filteredTasks.map((task) => (
-        <li key={`li-task-${task.id}`}>
-          <TaskCard key={`task-${task.id}`} task={task} />
-        </li>
+    <ul>
+      {filterText && <p>Filtrando por: {filterText}</p>}
+      {itemsFiltered.map((item) => (
+        <li key={getKey(item)}>{renderItem(item)}</li>
       ))}
     </ul>
   )
 }
 
-export default TaskList
+export default ListWithFilter

@@ -2,7 +2,8 @@ import { useState } from 'react'
 import './App.css'
 import SearchInput from './components/Input/SearchInput'
 import Layout from './components/Layout/Layout'
-import TaskList from './components/Lists/TaskList'
+import ListWithFilter from './components/Lists/TaskList'
+import TaskCard from './components/TaskCard/TaskCard'
 import { Task } from './types'
 
 const initialTasks: Task[] = [
@@ -34,7 +35,13 @@ function App() {
       <div>
         <Layout>
           <SearchInput label="prueba" value={inputValue} onValueChange={(texto) => setInputValue(texto)} />
-          <TaskList tasks={initialTasks} filterText={inputValue} />
+          <ListWithFilter
+            filterText={inputValue}
+            items={initialTasks}
+            getKey={(task: Task) => task.id}
+            filterByText={(task: Task, text) => (text ? task.title.includes(text) : true)}
+            renderItem={(task: Task) => <TaskCard task={task} />}
+          />
         </Layout>
       </div>
     </>

@@ -1,13 +1,15 @@
 import { fireEvent, render } from '@testing-library/react'
-import { TaskContextProvider } from '../Context/TaskContext'
+import { TaskWithOutId } from '../../types'
+import { TaskContext } from '../Context/TaskContext'
 import CreateTaskForm from './CreateTaskForm'
 
 describe('CreateTaskForm', () => {
   it('should add a task correctly', () => {
+    const addSpy = vitest.fn()
     const { getByLabelText, getByText } = render(
-      <TaskContextProvider>
+      <TaskContext.Provider value={{ tasks: [], addTask: addSpy, updateTask: () => {} }}>
         <CreateTaskForm />
-      </TaskContextProvider>,
+      </TaskContext.Provider>,
     )
 
     // Fill out the form
@@ -19,8 +21,16 @@ describe('CreateTaskForm', () => {
     expect(descriptionInput).toBeInTheDocument()
     expect(createButton).toBeInTheDocument()
 
-    fireEvent.change(titleInput, { target: { value: 'New Task' } })
-    fireEvent.change(descriptionInput, { target: { value: 'New Description' } })
+    const newTask: TaskWithOutId = {
+      title: 'new Task',
+      description: 'new description',
+      completed: false,
+    }
+
+    fireEvent.change(titleInput, { target: { value: newTask.title } })
+    fireEvent.change(descriptionInput, { target: { value: newTask.description } })
     fireEvent.click(createButton)
+
+    expect(addSpy).toHaveBeenCalledWith(newTask)
   })
 })

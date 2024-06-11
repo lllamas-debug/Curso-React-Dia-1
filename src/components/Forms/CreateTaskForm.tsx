@@ -1,12 +1,13 @@
-import { FC, FormEvent, useState } from 'react'
+import { FC, FormEvent, useContext, useState } from 'react'
 import { TaskWithOutId } from '../../types'
+import { TaskContext } from '../Context/TaskContext'
 import Input from '../Input/Input'
 
-interface CreateTaskFormProps {
-  addTask: (task: TaskWithOutId) => void
-}
+interface CreateTaskFormProps {}
 
-const CreateTaskForm: FC<CreateTaskFormProps> = ({ addTask }) => {
+const CreateTaskForm: FC<CreateTaskFormProps> = () => {
+  const { addTask } = useContext(TaskContext)
+
   const [taskTitle, setTaskTitle] = useState('')
   const [taskDescription, setTaskDescription] = useState('')
 

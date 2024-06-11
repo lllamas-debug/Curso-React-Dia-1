@@ -1,15 +1,12 @@
-import { ChangeEvent, FC, useCallback, useEffect, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
+import Input, { InputProps } from './Input'
 
-interface SearchInputProps {
-  label: string
-  value: string
-  onValueChange: (value: string) => void
-}
+interface SearchInputProps extends InputProps {}
 
-const SearchInput: FC<SearchInputProps> = ({ label, value, onValueChange }) => {
+const SearchInput: FC<SearchInputProps> = ({ onValueChange, ...props }) => {
   const whenChanged = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      onValueChange(e.target.value)
+    (text: string) => {
+      onValueChange(text)
     },
     [onValueChange],
   )
@@ -20,12 +17,7 @@ const SearchInput: FC<SearchInputProps> = ({ label, value, onValueChange }) => {
     inputRef.current?.focus()
   })
 
-  return (
-    <div>
-      <label htmlFor="busqueda">{label}</label>
-      <input name="busqueda" ref={inputRef} type="text" value={value} onChange={whenChanged} />
-    </div>
-  )
+  return <Input label={props.label} value={props.value} onValueChange={(text) => whenChanged(text)}></Input>
 }
 
 export default SearchInput

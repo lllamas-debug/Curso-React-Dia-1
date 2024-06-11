@@ -1,27 +1,22 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { FilterContext } from '../Context/FilterContext'
 
 interface ListProps<T> {
   items: T[]
-  filterText?: string
-  filterBoolean?: boolean
-  filterByText: (item: T, filter?: string) => boolean
-  filterByBoolean: (item: T, filter?: boolean) => boolean
   getKey: (item: T) => string | number
   renderItem: (item: T) => React.ReactNode
 }
 
-const ListWithFilter = <T,>({
-  items,
-  filterText,
-  filterBoolean,
-  getKey,
-  renderItem,
-  filterByText,
-  filterByBoolean,
-}: ListProps<T>) => {
-  const itemsFiltered: T[] = items
-    .filter((item) => filterByText(item, filterText))
-    .filter((item) => filterByBoolean(item, filterBoolean))
+const ListWithFilter = <T,>({ items, getKey, renderItem }: ListProps<T>) => {
+  const { filterText, filterBoolean, filterByText, filterByBoolean } = useContext(FilterContext)
+  const [itemsFiltered, setItemsFiltered] = useState<T[]>([])
+
+  // Recalculate itemsFiltered whenever filterText or filterBoolean changes
+  useEffect(() => {
+    const filteredItems = items.filter((item) => filterByText(item)).filter((item) => filterByBoolean(item))
+    setItemsFiltered(filteredItems)
+  }, [filterText, filterBoolean, filterByText, items, filterByBoolean])
+
   return (
     <ul>
       {filterText && <p>Filtrando por: {filterText}</p>}

@@ -4,3 +4,5 @@ export interface Task {
   description: string
   completed: boolean
 }
+
+export type TaskWithOutId = Omit<Task, 'id'>

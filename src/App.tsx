@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import './App.css'
+import CreateTaskForm from './components/Forms/CreateTaskForm'
 import SearchInput from './components/Input/SearchInput'
 import Layout from './components/Layout/Layout'
 import ListWithFilter from './components/Lists/TaskList'
 import TaskCard from './components/TaskCard/TaskCard'
-import { Task } from './types'
+import { Task, TaskWithOutId } from './types'
 
 const initialTasks: Task[] = [
   {
@@ -29,6 +30,7 @@ const initialTasks: Task[] = [
 
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
+  const [taskList, setTaskList] = useState<Task[]>(initialTasks)
 
   return (
     <>
@@ -37,10 +39,19 @@ function App() {
           <SearchInput label="prueba" value={inputValue} onValueChange={(texto) => setInputValue(texto)} />
           <ListWithFilter
             filterText={inputValue}
-            items={initialTasks}
+            items={taskList}
             getKey={(task: Task) => task.id}
             filterByText={(task: Task, text) => (text ? task.title.includes(text) : true)}
             renderItem={(task: Task) => <TaskCard task={task} />}
+          />
+          <CreateTaskForm
+            addTask={(task: TaskWithOutId) => {
+              const newTask: Task = {
+                id: 10,
+                ...task,
+              }
+              setTaskList([...taskList, newTask])
+            }}
           />
         </Layout>
       </div>

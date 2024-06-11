@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import './App.css'
 import CreateTaskForm from './components/Forms/CreateTaskForm'
 import SearchInput from './components/Input/SearchInput'
@@ -31,6 +31,11 @@ const initialTasks: Task[] = [
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
   const [taskList, setTaskList] = useState<Task[]>(initialTasks)
+  const changeCompletedStatus = useCallback((taskId: number) => {
+    setTaskList((prevTaskList) =>
+      prevTaskList.map((task) => (task.id === taskId ? { ...task, completed: !task.completed } : task)),
+    )
+  }, [])
 
   return (
     <>
@@ -42,7 +47,7 @@ function App() {
             items={taskList}
             getKey={(task: Task) => task.id}
             filterByText={(task: Task, text) => (text ? task.title.includes(text) : true)}
-            renderItem={(task: Task) => <TaskCard task={task} />}
+            renderItem={(task: Task) => <TaskCard task={task} changeCompletedStatus={changeCompletedStatus} />}
           />
           <CreateTaskForm
             addTask={(task: TaskWithOutId) => {
